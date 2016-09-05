@@ -27,45 +27,46 @@ def scanner(target, port):
        #From Chris: Then it creates the 10 byte message starting at address 0
        msg = "056405c9" + hex(i)[2:].zfill(2) + "000000"
        crc = getCRC(msg)
-       fullmsg = msg + crc
+       fullmsg = (msg + crc).upper()
        ping(s, fullmsg)
 
     # Second set
     for i in xrange(256):
        msg = "056405c9ff" + hex(i)[2:].zfill(2) + "0000"
        crc = getCRC(msg)
-       fullmsg = msg + crc
+       fullmsg = (msg + crc).upper()
        ping(s, fullmsg)
 
     # Third set
     for i in xrange(256):
        msg = "056405c9ffff" + hex(i)[2:].zfill(2) + "00"
        crc = getCRC(msg)
-       fullmsg = msg + crc
+       fullmsg = (msg + crc).upper()
        ping(s, fullmsg)
 
     # Fourth set
     for i in xrange(256):
        msg = "056405c9ffffff" + hex(i)[2:].zfill(2)
        crc = getCRC(msg)
-       fullmsg = msg + crc
+       fullmsg = (msg + crc).upper()
        ping(s, fullmsg)
 
     s.close()
 
 def ping(conn, msg):
+   fullhexmsg = r"\x" + r"\x".join(msg[n : n+2] for n in range(0, len(msg), 2))
    resp = ''
    # Sends the message
    try:
-       conn.send(msg)
+       conn.send(fullhexmsg)
    except:
-       print "Failed to send"
+       print "Failed to send: " + fullhexmsg
 
    #Waits for response
    try:
        resp = conn.recv(1024)
    except:
-       print "Failed to receive"
+       print "Failed to receive" 
 
    #Parses response
    if resp:
