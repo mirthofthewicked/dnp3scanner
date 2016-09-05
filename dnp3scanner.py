@@ -32,21 +32,21 @@ def scanner(target, port):
 
     # Second set
     for i in xrange(256):
-       msg = "056405c964" + hex(i)[2:].zfill(2) + "0000"
+       msg = "056405c9ff" + hex(i)[2:].zfill(2) + "0000"
        crc = getCRC(msg)
        fullmsg = msg + crc
        ping(s, fullmsg)
 
     # Third set
     for i in xrange(256):
-       msg = "056405c96464" + hex(i)[2:].zfill(2) + "00"
+       msg = "056405c9ffff" + hex(i)[2:].zfill(2) + "00"
        crc = getCRC(msg)
        fullmsg = msg + crc
        ping(s, fullmsg)
 
     # Fourth set
     for i in xrange(256):
-       msg = "056405c9646464" + hex(i)[2:].zfill(2)
+       msg = "056405c9ffffff" + hex(i)[2:].zfill(2)
        crc = getCRC(msg)
        fullmsg = msg + crc
        ping(s, fullmsg)
