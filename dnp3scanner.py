@@ -10,7 +10,7 @@ from crccheck.crc import Crc16Dnp
 #Initial concept by Chris Sistrunk. I'm just trying to make his dreams come true.
 
 def scanner(target, port):
-
+  
     # Attempt connection
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -21,46 +21,53 @@ def scanner(target, port):
         print "Failed to connect"
         s.close()
         
-    # This next section needs to be optimized..obviously... to go from x00x00x00x00 to xFFxFFxFFxFF
-    # First set
-    for i in xrange(256):
-       #From Chris: Then it creates the 10 byte message starting at address 0
-       msg = "056405c9" + hex(i)[2:].zfill(2) + "000000"
-       crc = getCRC(msg)
-       fullmsg = (msg + crc).upper()
-       ping(s, fullmsg)
+    try: 
+        # This next section needs to be optimized..obviously... to go from x00x00x00x00 to xFFxFFxFFxFF
+        # First set
+        for i in xrange(256):
+           #From Chris: Then it creates the 10 byte message starting at address 0
+           msg = "056405c9" + hex(i)[2:].zfill(2) + "000000"
+           crc = getCRC(msg)
+           fullmsg = (msg + crc).upper()
+           ping(s, fullmsg)
 
-    # Second set
-    for i in xrange(256):
-       msg = "056405c9ff" + hex(i)[2:].zfill(2) + "0000"
-       crc = getCRC(msg)
-       fullmsg = (msg + crc).upper()
-       ping(s, fullmsg)
+        # Second set
+        for i in xrange(256):
+           msg = "056405c9ff" + hex(i)[2:].zfill(2) + "0000"
+           crc = getCRC(msg)
+           fullmsg = (msg + crc).upper()
+           ping(s, fullmsg)
 
-    # Third set
-    for i in xrange(256):
-       msg = "056405c9ffff" + hex(i)[2:].zfill(2) + "00"
-       crc = getCRC(msg)
-       fullmsg = (msg + crc).upper()
-       ping(s, fullmsg)
+        # Third set
+        for i in xrange(256):
+           msg = "056405c9ffff" + hex(i)[2:].zfill(2) + "00"
+           crc = getCRC(msg)
+           fullmsg = (msg + crc).upper()
+           ping(s, fullmsg)
 
-    # Fourth set
-    for i in xrange(256):
-       msg = "056405c9ffffff" + hex(i)[2:].zfill(2)
-       crc = getCRC(msg)
-       fullmsg = (msg + crc).upper()
-       ping(s, fullmsg)
+        # Fourth set
+        for i in xrange(256):
+           msg = "056405c9ffffff" + hex(i)[2:].zfill(2)
+           crc = getCRC(msg)
+           fullmsg = (msg + crc).upper()
+           ping(s, fullmsg)
+
+    # This doesn't seem to be working..
+    except KeyboardInterrupt:
+        print "User Aborted. Closing.."
+        s.close()
+        sys.exit(1)
 
     s.close()
 
 def ping(conn, msg):
-   fullhexmsg = r"\x" + r"\x".join(msg[n : n+2] for n in range(0, len(msg), 2))
+   #fullhexmsg = r"\x" + r"\x".join(msg[n : n+2] for n in range(0, len(msg), 2))
    resp = ''
    # Sends the message
    try:
-       conn.send(fullhexmsg)
+       conn.send(msg)
    except:
-       print "Failed to send: " + fullhexmsg
+       print "Failed to send: " + msg
 
    #Waits for response
    try:
