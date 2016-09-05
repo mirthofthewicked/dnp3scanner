@@ -35,13 +35,11 @@ def scanner(target, port):
        except:
            print "Failed to send"
 
-
        #Waits for response
        try:
            resp = s.recv(1024)
        except:
            print "Failed to receive"
-
 
        #Parses response
        if resp:
@@ -50,6 +48,8 @@ def scanner(target, port):
            # Will add this later..
            #> Stores DNP3 response info in a db
            #writedb(resp)
+
+    s.close()
 
 
 def writedb(data):
