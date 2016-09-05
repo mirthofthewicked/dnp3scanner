@@ -20,6 +20,7 @@ def scanner(target, port):
     except:
         print "Failed to connect"
         s.close()
+        sys.exit(1)
         
     try: 
         # This next section needs to be optimized..obviously... to go from x00x00x00x00 to xFFxFFxFFxFF
