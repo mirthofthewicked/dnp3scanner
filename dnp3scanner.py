@@ -53,7 +53,7 @@ def scanner(target, port):
 
 
 def writedb(data):
-    # This will end up using pymongo ?? he wanted a database
+    # This will end up using sqlite ?? he wanted a database
     print "In ur databases, storin' ur dudes"
 
 
