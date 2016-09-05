@@ -10,7 +10,6 @@ from crccheck.crc import Crc16Dnp
 #Initial concept by Chris Sistrunk. I'm just trying to make his dreams come true.
 
 def scanner(target, port):
-    resp = ''
 
     # Attempt connection
     try:
@@ -22,35 +21,59 @@ def scanner(target, port):
         print "Failed to connect"
         s.close()
         
-    # Concept with first 100, will expand to 65535 after I get this working
-    for i in xrange(101):
+    # This next section needs to be optimized..obviously... to go from x00x00x00x00 to xFFxFFxFFxFF
+    # First set
+    for i in xrange(256):
        #From Chris: Then it creates the 10 byte message starting at address 0
        msg = "056405c9" + hex(i)[2:].zfill(2) + "000000"
        crc = getCRC(msg)
        fullmsg = msg + crc
+       ping(s, fullmsg)
 
-       # Sends the message
-       try:
-           s.send(fullmsg)
-       except:
-           print "Failed to send"
+    # Second set
+    for i in xrange(256):
+       msg = "056405c964" + hex(i)[2:].zfill(2) + "0000"
+       crc = getCRC(msg)
+       fullmsg = msg + crc
+       ping(s, fullmsg)
 
-       #Waits for response
-       try:
-           resp = s.recv(1024)
-       except:
-           print "Failed to receive"
+    # Third set
+    for i in xrange(256):
+       msg = "056405c96464" + hex(i)[2:].zfill(2) + "00"
+       crc = getCRC(msg)
+       fullmsg = msg + crc
+       ping(s, fullmsg)
 
-       #Parses response
-       if resp:
-           print "Response received.."
-           print resp
-           # Will add this later..
-           #> Stores DNP3 response info in a db
-           #writedb(resp)
+    # Fourth set
+    for i in xrange(256):
+       msg = "056405c9646464" + hex(i)[2:].zfill(2)
+       crc = getCRC(msg)
+       fullmsg = msg + crc
+       ping(s, fullmsg)
 
     s.close()
 
+def ping(conn, msg):
+   resp = ''
+   # Sends the message
+   try:
+       conn.send(msg)
+   except:
+       print "Failed to send"
+
+   #Waits for response
+   try:
+       resp = conn.recv(1024)
+   except:
+       print "Failed to receive"
+
+   #Parses response
+   if resp:
+       print "Response received.."
+       print resp
+       # Will add this later..
+       #> Stores DNP3 response info in a db
+       #writedb(resp)
 
 def writedb(data):
     # This will end up using sqlite ?? he wanted a database
