@@ -3,6 +3,7 @@
 import argparse
 import socket
 import sys
+import binascii
 from IPy import IP
 from crccheck.crc import Crc16Dnp
 
@@ -66,7 +67,7 @@ def ping(conn, msg):
    resp = ''
    # Sends the message
    try:
-       conn.send(msg)
+       conn.send(binascii.unhexlify(msg))
    except:
        print "Failed to send: " + msg
 
