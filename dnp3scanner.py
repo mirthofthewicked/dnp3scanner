@@ -66,6 +66,7 @@ def scanner(target, port):
 def ping(conn, msg):
    #fullhexmsg = r"\x" + r"\x".join(msg[n : n+2] for n in range(0, len(msg), 2))
    resp = ''
+   lol=''
    # Sends the message
    try:
        conn.send(binascii.unhexlify(msg))
@@ -76,12 +77,14 @@ def ping(conn, msg):
    try:
        resp = conn.recv(1024)
    except:
-       print "Failed to receive" 
+       lol+='.' 
 
    #Parses response
    if resp:
        print "Response received.."
        print hexdump.hexdump(resp)
+       if resp != 0:
+          print "address found! msg:",  msg
        # Will add this later..
        #> Stores DNP3 response info in a db
        #writedb(resp)
