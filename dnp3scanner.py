@@ -6,6 +6,7 @@ import sys
 import binascii
 from IPy import IP
 from crccheck.crc import Crc16Dnp
+import hexdump
 
 
 #Initial concept by Chris Sistrunk. I'm just trying to make his dreams come true.
@@ -80,7 +81,7 @@ def ping(conn, msg):
    #Parses response
    if resp:
        print "Response received.."
-       print resp
+       print hexdump.hexdump(resp)
        # Will add this later..
        #> Stores DNP3 response info in a db
        #writedb(resp)
